@@ -1,36 +1,34 @@
 import React, { useState, useEffect } from "react";
+import { fetchHistoricalDataAll } from "../../api";
 import { Line, Bar } from "react-chartjs-2";
-import { fetchDailyUpdate } from "../../api";
 
 import styles from "./Chart.module.css";
 
-function Chart({ data: { confirmed, recovered, deaths }, pickedCountry }) {
-  const [dailyData, setDailyData] = useState([]);
+function Chart({ data: { cases, recovered, deaths }, pickedCountry }) {
+  //   const [state, setstate] = useState({});
+  const [dailyData, setDailyData] = useState({});
   //   const [state, setstate] = useState({});
   useEffect(() => {
     const f = async () => {
-      setDailyData(await fetchDailyUpdate());
+      setDailyData(await fetchHistoricalDataAll());
     };
     f();
   }, []);
 
-  useEffect(() => {
-    console.log("dailyData -> ", dailyData);
-  }, [dailyData]);
 
-  const lineChart = dailyData?.length ? (
+  const lineChart = dailyData?.cases ? (
     <Line
       data={{
-        labels: dailyData.map(({ date }) => date),
+        labels: Object.keys(dailyData.cases),
         datasets: [
           {
-            data: dailyData.map(({ confirmed }) => confirmed),
+            data: Object.values(dailyData.cases),
             label: "Infected",
             borderColor: "#3333ff",
             fill: true,
           },
           {
-            data: dailyData.map(({ deaths }) => deaths),
+            data: Object.values(dailyData.deaths),
             label: "Deaths",
             borderColor: "red",
             backgroundColor: "rgba(255,0,0,0.5)",
@@ -41,7 +39,7 @@ function Chart({ data: { confirmed, recovered, deaths }, pickedCountry }) {
     />
   ) : null;
 
-  const barChart = confirmed ? (
+  const barChart = cases ? (
     <Bar
       data={{
         labels: ["Infected", "Recovered", "Dead"],
@@ -53,7 +51,7 @@ function Chart({ data: { confirmed, recovered, deaths }, pickedCountry }) {
               "rgba(0,255,0, 0.5)",
               "rgba(255,0,0, 0.5)",
             ],
-            data: [confirmed.value, recovered.value, deaths.value],
+            data: [cases, recovered, deaths],
           },
         ],
       }}

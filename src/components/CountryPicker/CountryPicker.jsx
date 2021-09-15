@@ -12,7 +12,6 @@ function CountryPicker({handlePickCountry}) {
       setCountryList(await fetchCountries());
     };
     f();
-    console.log("countryList -> ", countryList);
   }, [setCountryList]);
 
   const countrySelectOptions = countryList.length

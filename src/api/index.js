@@ -1,33 +1,39 @@
 import axios from "axios";
 
-const url = "https://covid19.mathdro.id/api";
+const url = "https://disease.sh/v3/covid-19";
+const urlHistorical = "https://disease.sh/v3/covid-19/historical/all?lastdays=all";
 
 export const fetchData = async (country) => {
   let changeableUrl = url;
-  if(country){
-    changeableUrl=`${url}/countries/${country}`
+  if (country) {
+    changeableUrl = `${url}/countries/${country}`;
+  } else {
+    changeableUrl = `${url}/all`;
   }
   try {
+    const { data } = await axios.get(changeableUrl);
     const {
-      data: { confirmed, recovered, deaths, lastUpdate },
-    } = await axios.get(changeableUrl);
-
-    return { confirmed, recovered, deaths, lastUpdate };
-  } catch (error) {
-    console.error("Something wrong!", error);
-  }
-};
-
-export const fetchDailyUpdate = async () => {
-  try {
-    const { data } = await axios.get(`${url}/daily`);
-    console.log("dailyUpdateData -> ", data);
-    const modifiedData = data.map((dailyData) => ({
-      confirmed: dailyData.confirmed.total,
-      deaths: dailyData.deaths.total,
-      date: dailyData.reportDate,
-    }));
-    return modifiedData;
+      updated,
+      cases,
+      todayCases,
+      recovered,
+      todayRecovered,
+      deaths,
+      todayDeaths,
+    } = data;
+    console.log("raw response from fetchData() -> ", data);
+    console.log(
+      `cases: ${cases}, todayCases: ${todayCases}, recovered: ${recovered}, todayRecovered: ${todayRecovered} deaths :${deaths}, todayDeaths: ${todayDeaths} updated: ${updated}`
+    );
+    return {
+      updated,
+      cases,
+      todayCases,
+      recovered,
+      todayRecovered,
+      deaths,
+      todayDeaths,
+    };
   } catch (error) {
     console.error("Something wrong!", error);
   }
@@ -35,11 +41,19 @@ export const fetchDailyUpdate = async () => {
 
 export const fetchCountries = async () => {
   try {
-    const {
-      data: { countries },
-    } = await axios.get(`${url}/countries`);
-    console.log("countries from api -> ", countries);
-    return countries.map((c) => c?.name);
+    const { data } = await axios.get(`${url}/countries`);
+    console.log("countries from api -> ", data);
+    return data.map((c) => c?.country);
+  } catch (error) {
+    console.error("Something wrong!", error);
+  }
+};
+
+export const fetchHistoricalDataAll = async () => {
+  try {
+    const { data } = await axios.get(urlHistorical);
+    console.log("historical data -> ", data);
+    return data;
   } catch (error) {
     console.error("Something wrong!", error);
   }

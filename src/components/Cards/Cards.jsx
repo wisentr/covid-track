@@ -4,8 +4,8 @@ import CountUp from "react-countup";
 import styles from "./Cards.module.css";
 import cx from "classnames";
 
-function Cards({ data: { confirmed, recovered, deaths, lastUpdate } }) {
-  if (!confirmed) {
+function Cards({ data: {  cases, recovered, deaths,  updated } }) {
+  if (!cases) {
     return "Loading..";
   }
   return (
@@ -16,7 +16,7 @@ function Cards({ data: { confirmed, recovered, deaths, lastUpdate } }) {
           component={Card}
           xs={12}
           md={3}
-          className={cx(styles.card, styles.confirmed)}
+          className={cx(styles.card, styles.cases)}
         >
           <CardContent>
             <Typography color="textSecondary" gutterBottom>
@@ -25,13 +25,14 @@ function Cards({ data: { confirmed, recovered, deaths, lastUpdate } }) {
             <Typography variant="h5">
               <CountUp
                 start={0}
-                end={confirmed?.value}
+                end={cases}
                 duration={2.5}
-                seperator=","
+                separator=","
+                decimal="."
               />
             </Typography>
             <Typography color="textSecondary">
-              {new Date(lastUpdate).toDateString()}
+              {new Date(updated).toDateString()}
             </Typography>
             <Typography variant="body2">
               Number of active cases of COVID-19
@@ -49,15 +50,17 @@ function Cards({ data: { confirmed, recovered, deaths, lastUpdate } }) {
             <Typography color="textSecondary" gutterBottom>
               Recovered
             </Typography>
-            <CountUp
-              start={0}
-              end={recovered?.value}
-              duration={2.5}
-              decimal="."
-              separator=","
-            />{" "}
+            <Typography variant="h5">
+              <CountUp
+                start={0}
+                end={recovered}
+                duration={2.5}
+                decimal="."
+                separator=","
+              />
+            </Typography>
             <Typography color="textSecondary">
-              {new Date(lastUpdate).toDateString()}
+              {new Date(updated).toDateString()}
             </Typography>
             <Typography variant="body2">
               Number of recoveries from of COVID-19
@@ -78,13 +81,14 @@ function Cards({ data: { confirmed, recovered, deaths, lastUpdate } }) {
             <Typography variant="h5">
               <CountUp
                 start={0}
-                end={deaths?.value}
+                end={deaths}
                 duration={2.5}
-                seperator=","
+                decimal="."
+                separator=","
               />
             </Typography>
             <Typography color="textSecondary">
-              {new Date(lastUpdate).toDateString()}
+              {new Date(updated).toDateString()}
             </Typography>
             <Typography variant="body2">
               Number of deaths caused by COVID-19

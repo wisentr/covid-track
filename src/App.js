@@ -12,12 +12,10 @@ function App() {
   useEffect(() => {
     const f = async () => {
       const data = await fetchData();
-      console.log("data -> ", data);
       setdata(data);
     };
     f();
   }, []);
-  console.log("pickedCountry -> ", pickedCountry);
 
   const handlePickCountry = async (country) => {
     const fetchedData = await fetchData(country);
