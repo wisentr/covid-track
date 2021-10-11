@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 
-import { Cards, Chart, CountryPicker } from "./components";
+import {
+  Cards,
+  Chart,
+  CountryPicker,
+  Footer,
+} from "./components";
 import styles from "./App.module.css";
 import { fetchData } from "./api";
 
@@ -29,6 +34,7 @@ function App() {
       <Cards data={data} />
       <CountryPicker handlePickCountry={handlePickCountry} />
       <Chart data={data} pickedCountry={pickedCountry} />
+      <Footer />
     </div>
   );
 }
